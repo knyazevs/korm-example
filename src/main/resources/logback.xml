@@ -1,0 +1,36 @@
+<configuration>
+    <!--Define variables-->
+    <property name="logback.logDir" value="web/logs"/>
+    <property name="logback.appName" value="fyc"/>
+
+    <!--Output to the console-->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{YYYY-MM-dd HH:mm:ss} [%-5level] %logger{36} [%file : %line] - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="fileRolling" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--If you just want an ERROR-level log, you need to filter it. The default is Info level, ThresholdFilter-->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>error</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${logback.logDir}/error.${logback.appName}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!--A single log file up to 100MB, a 60-day log cycle, the maximum cannot exceed 20GB, and the size of the window is 1 to 3. When 3 archive files are stored, the earliest logs will be covered-->
+            <maxFileSize>200MB</maxFileSize>
+            <maxHistory>15</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+            <!--            <minIndex>1</minIndex>-->
+            <!--            <maxIndex>3</maxIndex>-->
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{YYYY-MM-dd HH:mm:ss} [%-5level] %logger{36} [%file : %line] - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <root level="INFO">
+        <appender-ref ref="console"/>
+        <appender-ref ref="fileRolling"/>
+    </root>
+    <logger name="org.eclipse.jetty" level="INFO"/>
+    <logger name="io.netty" level="INFO"/>
+</configuration>
